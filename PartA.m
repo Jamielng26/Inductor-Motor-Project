@@ -200,5 +200,74 @@ fprintf('Stator current for SE Motor under no-load:: %.4f < %.2f° A\n', abs(I_n
 fprintf('Stator current for SE Motor under no-load:: %.4f < %.2f° A\n', abs(I_nl_SE), rad2deg(angle(I_nl_SE)));
 disp('Under no-load conditions, the stator current is relatively low as only the magnetizing current is required to maintain the magnetic field.');
 
-disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+disp('QUESTION 4: Power Factor vs. speed characteristics for EE and SE Motor:')
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
+PF_EE = cos(I1_phase_EE);
+PF_SE = cos(I1_phase_SE);
+
+% a) Calculate the power factors at start-up.
+PF_start_EE = cos(angle(I_start_EE));
+PF_start_SE = cos(angle(I_start_SE));
+
+fprintf('\n4.a) Power factor at start-up\n');
+fprintf('Power factor at start-up for EE motor: %.4f\n', PF_start_EE);
+fprintf('Power factor at start-up for SE motor: %.4f\n', PF_start_SE);
+
+% b)  Determine the power factors when the machines develop maximum torque.
+
+PF_max_torque_EE = cos(angle(I_tmax_EE));
+PF_max_torque_SE = cos(angle(I_tmax_SE));
+
+fprintf('\n4.b) Power factor at max torque\n');
+fprintf('Power factor at max torque for EE motor: %.4f\n', PF_max_torque_EE);
+fprintf('Power factor at max torque for SE motor: %.4f\n', PF_max_torque_SE);
+
+% c) PF at no-load
+
+PF_nl_EE = cos(angle(I_nl_EE));
+PF_nl_SE = cos(angle(I_nl_SE));
+
+fprintf('\n4.c) Power factor at no-load\n');
+fprintf('Power factor at no-load for EE motor: %.4f\n', PF_nl_EE);
+fprintf('Power factor at no-load for SE motor: %.4f\n', PF_nl_SE);
+disp('Expect very low power factor (0.1–0.3) due to dominant magnetizing current. Edit this !');
+
+% d) Best PF
+
+ disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+ disp('QUESTION 5: Power vs. speed characteristics for EE and SE Motor:')
+ disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
+% a) Calculate the stator and rotor copper losses at start-up.
+
+P1_cu_start_EE = 3 * R1_EE * abs(I_start_EE)^2;
+I2_start_EE = Vth_EE./sqrt((Rth_EE+R2p_EE./1).^2 + (Xth_EE+X2p_EE)^2); % s = 1 at start-up
+P2_cu_start_EE = (I2_start_EE^2)*R2p_EE;
+
+P1_cu_start_SE = 3 * R1_SE * abs(I_start_SE)^2;
+I2_start_SE = Vth_SE./sqrt((Rth_SE+R2p_SE./1).^2 + (Xth_SE+X2p_SE)^2); % s = 1 at start-up
+P2_cu_start_SE = (I2_start_SE^2)*R2p_SE;
+
+fprintf('\n5.a) Stator and Rotor Copper losses at start-up\n');
+fprintf('Stator copper loss at start-up for EE motor: %.4f W\n', P1_cu_start_EE);
+fprintf('Rotor copper loss at start-up for EE motor: %.4f W\n\n', P2_cu_start_EE);
+
+fprintf('Stator copper loss at start-up for SE motor: %.4f W\n', P1_cu_start_SE);
+fprintf('Rotor copper loss at start-up for SE motor: %.4f W\n', P2_cu_start_SE);
+
+% b) Calculate the stator and rotor copper losses at no-load
+
+P1_cu_nl_EE = 3 * R1_EE * abs(I_nl_EE)^2;
+P1_cu_nl_SE = 3 * R1_SE * abs(I_nl_SE)^2;
+
+P2_cu_nl_EE = 0;
+P2_cu_nl_SE = 0;
+
+fprintf('\n5.b) Stator and Rotor Copper losses at no-load\n');
+fprintf('Stator copper loss at no-load for EE motor: %.4f W\n', P1_cu_nl_EE);
+fprintf('Rotor copper loss at no-load for EE motor: %.4f W\n\n', P2_cu_nl_EE);
+
+fprintf('Stator copper loss at no-load for SE motor: %.4f W\n', P1_cu_nl_SE);
+fprintf('Rotor copper loss at no-load for SE motor: %.4f W\n', P2_cu_nl_SE);
