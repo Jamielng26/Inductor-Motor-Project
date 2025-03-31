@@ -271,3 +271,75 @@ fprintf('Rotor copper loss at no-load for EE motor: %.4f W\n\n', P2_cu_nl_EE);
 
 fprintf('Stator copper loss at no-load for SE motor: %.4f W\n', P1_cu_nl_SE);
 fprintf('Rotor copper loss at no-load for SE motor: %.4f W\n', P2_cu_nl_SE);
+
+% c) Finding the input power, shaft power and air gap power.
+
+Pin_SE = 3 .* V1_SE .* I1_mag_SE .* PF_SE;
+Pin_EE = 3 .* V1_EE .* I1_mag_SE .* PF_EE;
+
+P1_cu_SE = 3 .* (I1_mag_SE.^2).*R1_SE;
+P1_cu_EE = 3 .* (I1_mag_EE.^2).*R1_EE;
+
+P_ag_SE = Pin_SE - P1_cu_SE;
+P_ag_EE = Pin_EE - P1_cu_EE;
+
+P2_cu_SE = s.*P_ag_SE;
+P2_cu_EE = s.*P_ag_EE;
+
+P_shaft_SE = (1.-s).*P_ag_SE;% rotational losses neglected hence P_shaft = P_mech = (1-s)P_airgap
+P_shaft_EE = (1.-s).*P_ag_EE;
+
+figure;
+plot(n, Pin_SE, 'r', 'LineWidth', 2); hold on;
+plot(n, P_ag_SE, 'b', 'LineWidth', 2);
+plot(n, P_shaft_SE, 'g', 'LineWidth', 2);
+plot(n, Pin_EE, 'c', 'LineWidth', 2); 
+plot(n, P_ag_EE, 'k', 'LineWidth', 2);
+plot(n, P_shaft_EE, 'm', 'LineWidth', 2);
+xlabel('Rotor Speed (RPM)');
+ylabel('Power (W)');
+title('Power vs Speed for SE and EE Motor');
+legend({'Input Power(SE)', 'Airgap Power(SE)', 'Shaft Power(SE)','Input Power(EE)', 'Airgap Power(EE)', 'Shaft Power(EE)'}, 'Location', 'Best');
+grid on;
+hold off;
+
+figure;
+plot(n, P1_cu_SE, 'r', 'LineWidth', 2); hold on;
+plot(n, P2_cu_SE, 'b', 'LineWidth', 2);
+xlabel('Rotor Speed (RPM)');
+ylabel('Losses(Stator and Rotor Copper losses) (W)');
+title('Losses vs Speed for SE Motor');
+legend({'Stator Copper Losses', 'Rotor Copper Losses'}, 'Location', 'Best');
+grid on;
+hold off;
+
+figure;
+plot(n, P1_cu_EE, 'r', 'LineWidth', 2); hold on;
+plot(n, P2_cu_EE, 'b', 'LineWidth', 2);
+xlabel('Rotor Speed (RPM)');
+ylabel('Losses(Stator and Rotor Copper losses) (W)');
+title('Losses vs Speed for EE Motor');
+legend({'Stator Copper Losses', 'Rotor Copper Losses'}, 'Location', 'Best');
+grid on;
+hold off;
+
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+disp('QUESTION 6: Efficiency vs. speed characteristics for EE and SE Motor:')
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
+% a) Machine efficiency at maximum torque
+
+Pin_Tmax_SE = 3 * V1_SE * abs(I_tmax_SE) * PF_max_torque_SE;
+Pin_Tmax_EE = 3 * V1_EE * abs(I_tmax_EE) * PF_max_torque_EE;
+
+P_ag_Tmax_SE = Pin_Tmax_SE - (3*(abs(I_tmax_SE))^2*R1_SE);
+P_ag_Tmax_EE = Pin_Tmax_EE - (3*(abs(I_tmax_EE))^2*R1_EE);
+
+Pout_Tmax_SE = P_ag_Tmax_SE*(1-st_max_SE);% P_shaft = P_mech = Pout
+Pout_Tmax_EE = P_ag_Tmax_EE*(1-st_max_EE);
+
+Eff_Tmax_SE = (Pout_Tmax_SE/Pin_Tmax_SE)*100;
+Eff_Tmax_EE = (Pout_Tmax_EE/Pin_Tmax_EE)*100;
+
+fprintf('Efficiency at maximum torque for SE motor: %.4f W\n', Eff_Tmax_SE);
+fprintf('Efficiency at maximum torque for EE motor: %.4f W\n\n', Eff_Tmax_EE);
