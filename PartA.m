@@ -343,3 +343,110 @@ Eff_Tmax_EE = (Pout_Tmax_EE/Pin_Tmax_EE)*100;
 
 fprintf('Efficiency at maximum torque for SE motor: %.4f W\n', Eff_Tmax_SE);
 fprintf('Efficiency at maximum torque for EE motor: %.4f W\n\n', Eff_Tmax_EE);
+
+% b) Maximum Machine efficiency
+
+Eff_SE = (P_shaft_SE./Pin_SE).*100;
+Eff_EE = (P_shaft_EE./Pin_EE).*100;
+
+figure;
+plot(n, Eff_SE, 'r', 'LineWidth', 2); hold on;
+plot(n, Eff_EE, 'b', 'LineWidth', 2);
+xlabel('Rotor Speed (RPM)');
+ylabel('Machine Efficiency');
+title('Efficiency vs Speed for SE and EE Motor');
+legend({'SE Efficiency', 'EE Efficiency'}, 'Location', 'Best');
+grid on;
+hold off;
+
+[max_Eff_SE,Max_Eff_SE_index] = max(Eff_SE);
+[max_Eff_EE,Max_Eff_EE_index] = max(Eff_EE);
+
+
+fprintf('Maximum Efficiency for SE motor: %.4f %%\n', max_Eff_SE);
+fprintf('Maximum Efficiency for EE motor: %.4f %%\n\n', max_Eff_EE);
+
+% c) Finding the speed at maximum efficiency 
+
+% Finding speed using array indices.
+
+n_max_Eff_SE = n(Max_Eff_SE_index);
+n_max_Eff_EE = n(Max_Eff_EE_index);
+
+
+fprintf('Speed n at maximum efficiency for SE motor: %.4f RPM\n', n_max_Eff_SE);
+fprintf('Speed n at maximum efficiency for EE motor: %.4f RPM\n\n',n_max_Eff_EE);
+
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+disp('QUESTION 7: Adding a Centrifugal pump as a load to the EE and SE Motor:')
+disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
+% a) Finding machine speed when operating the load
+
+T_Load = k_Load .* (w.^2);
+
+figure;
+plot(n, Tmech_SE, 'r', 'LineWidth', 2); hold on;
+plot(n, Tmech_EE, 'b', 'LineWidth', 2);
+plot(n,T_Load, 'c', 'LineWidth', 2);
+xlabel('Rotor Speed (RPM)');
+ylabel('Torque (W)');
+title('Torque vs Speed for SE Motor');
+legend({'Torque SE', 'Torque EE' , 'Torque Load'}, 'Location', 'Best');
+grid on;
+hold off;
+
+% The operating point is when T_mech and T_load are equal.
+
+SE_TMEch_Tload_ratio = abs(Tmech_SE./T_Load - 1);
+EE_TMEch_Tload_ratio = abs(Tmech_EE./T_Load - 1);
+
+% Finding when the ratio is 1
+
+[~,Operating_point_index_SE] = min(SE_TMEch_Tload_ratio); % done like this since the values do not perfectly match.
+[~,Operating_point_index_EE] = min(EE_TMEch_Tload_ratio);
+
+Operating_speed_SE = n(Operating_point_index_SE);
+Operating_speed_EE = n(Operating_point_index_EE);
+
+fprintf('Speed n when operating pump for SE motor: %.4f RPM\n', Operating_speed_SE);
+fprintf('Speed n when operating pump for EE motor: %.4f RPM\n\n',Operating_speed_EE);
+
+% b) Current drawn during operation
+
+I1_Operating_SE = I1_mag_SE(Operating_point_index_SE);
+I1_Operating_EE = I1_mag_EE(Operating_point_index_EE);
+
+fprintf('Current drawn I1 when operating pump for SE motor: %.4f A\n', I1_Operating_SE);
+fprintf('Current drawn I1 when operating pump for EE motor: %.4f A\n\n',I1_Operating_EE);
+
+% c) Machine efficiency during operation
+
+Eff_Operating_SE = Eff_SE(Operating_point_index_SE);
+Eff_Operating_EE = Eff_EE(Operating_point_index_EE);
+
+fprintf('Efficiency when operating pump for SE motor: %.4f %%\n', Eff_Operating_SE);
+fprintf('Efficiency when operating pump for EE motor: %.4f %%\n\n',Eff_Operating_EE);
+
+% d) Power output/supply during operation
+
+Pout_Operating_SE = P_shaft_SE(Operating_point_index_SE);
+Pout_Operating_EE = P_shaft_EE(Operating_point_index_EE);
+
+fprintf('Output power when operating pump for SE motor: %.4f W\n', Pout_Operating_SE);
+fprintf('Output power when operating pump for EE motor: %.4f W\n\n',Pout_Operating_EE);
+
+
+% e) Input Power during operation
+
+Pin_Operating_SE = Pin_SE(Operating_point_index_SE);
+Pin_Operating_EE = Pin_EE(Operating_point_index_EE);
+
+fprintf('Input Power drawn when operating pump for SE motor: %.4f W\n', Pin_Operating_SE);
+fprintf('Input Power drawn when operating pump for EE motor: %.4f W\n\n',Pin_Operating_EE);
+
+% f) Comparing input power for EE and SE
+
+Diff_Pin_Comp = (Pin_Operating_SE - Pin_Operating_EE);
+
+fprintf('The difference in input power is: %.4f W\n',Diff_Pin_Comp);
