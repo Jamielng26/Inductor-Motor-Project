@@ -3,7 +3,7 @@ clear;  % Clears all variables from the workspace
 %close all;  % Closes all open figures
 
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-disp('Energy Efficient (EE)Motor parameters')
+disp('Energy Efficient (EE) Motor parameters')
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
  
 f_EE=50;               %Supply frequency [Hz]
@@ -108,7 +108,6 @@ n_max_SE = (1 - st_max_SE) * ns;
 
 % Plot Torque vs Speed for EE and SE Motors
 figure;
-subplot(2,2,1),
 plot(n, Tmech_EE, 'r', 'LineWidth', 2), hold on;
 plot(n, Tmech_SE, 'b', 'LineWidth', 2);
 xlabel('Rotor Speed (RPM)'), ylabel('Torque (Nm)'),...
@@ -150,7 +149,7 @@ I1_phase_SE = angle(I1_SE);
 
 % Plot Stator Current vs Speed for EE and SE Motors
 figure;
-subplot(2,2,2),
+
 plot(n, I1_mag_EE, 'r', 'LineWidth', 2), hold on;
 plot(n, I1_mag_SE, 'b', 'LineWidth', 2);
 xlabel('Rotor Speed [RPM]'), ylabel('Stator Current [A]'),...
@@ -170,10 +169,11 @@ fprintf('Stator current for EE Motor at start-up: %.4f < %.2f° A\n', abs(I_star
 fprintf('Stator current for SE Motor at start-up: %.4f < %.2f° A\n', abs(I_start_SE), rad2deg(angle(I_start_SE)));
 
 fprintf('\n');
-disp('At start-up, the stator current is high because the slip is 1, leading to higher rotor resistance and higher current draw.');
+disp('At start-up the stator current of the EE motor is 4.08 A greater than the SE motor. The result is as expected and the slight difference aligns with the general characteristics of EE vs SE motors. The values of R1, X1 and R2p, X2p are lower for EE motors, and these lower resistances cause the higher start-up current.\n')
 
 % b) Explain stator current change under no-load and full-load conditions
-disp('b) The stator current at start-up will be highest due to the high slip (s=1). Under no-load conditions, the slip is small (close to 0), and the current decreases significantly, as most of the current is used to magnetize the machine. Under full-load conditions, the slip increases, and the stator current increases again due to higher losses in the rotor resistance.');
+fprintf('\n');
+disp('b) Under no-load: The motor experiences high inrush current at start-up, but as the speed increses, the required torque is minimal, so the current drop to a small magnetising current.\n Under full-load: The motor experiences high inrush current at start-up, however, as the speed increases, the load torque requires higher current to sustain it.\n');
 
 % c) Stator current at maximum torque
 Z1_tmax_EE = R1_EE+(1i*X1_EE)+1i*Xm_EE*((R2p_EE./st_max_EE)+1i*X2p_EE)./((R2p_EE./st_max_EE)+1i*(Xm_EE+X2p_EE));
@@ -207,6 +207,15 @@ disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 PF_EE = cos(I1_phase_EE);
 PF_SE = cos(I1_phase_SE);
 
+% Plot Power factor vs Speed for EE and SE Motors
+figure;
+plot(n, PF_EE, 'r', 'LineWidth', 2), hold on;
+plot(n, PF_SE, 'b', 'LineWidth', 2);
+xlabel('Rotor Speed (RPM)'), ylabel('Power Factor'),...
+title('Power Factor vs Speed for EE and SE Motors'), grid on;
+legend('EE Motor', 'SE Motor');
+
+
 % a) Calculate the power factors at start-up.
 PF_start_EE = cos(angle(I_start_EE));
 PF_start_SE = cos(angle(I_start_SE));
@@ -232,9 +241,16 @@ PF_nl_SE = cos(angle(I_nl_SE));
 fprintf('\n4.c) Power factor at no-load\n');
 fprintf('Power factor at no-load for EE motor: %.4f\n', PF_nl_EE);
 fprintf('Power factor at no-load for SE motor: %.4f\n', PF_nl_SE);
-disp('Expect very low power factor (0.1–0.3) due to dominant magnetizing current. Edit this !');
+disp('This is as expected, the PF under no-load is very low, because the current is mostly reactive (magnetizing current), and the real power is minimal since there is no load.');
 
 % d) Best PF
+disp('The best PF for the EE motor (from the graph) is: 0.847859')
+disp('The best PF for the SE motor (from the graph) is: 0.820597')
+
+% e) Best speed 
+disp('The speed at best PF for the EE motor (from the graph) is: 1363.5 rpm')
+disp('The speed at best PF for the SE motor (from the graph) is: 1356.75 rpm')
+
 
  disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
  disp('QUESTION 5: Power vs. speed characteristics for EE and SE Motor:')
@@ -329,20 +345,22 @@ disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 % a) Machine efficiency at maximum torque
 
-Pin_Tmax_SE = 3 * V1_SE * abs(I_tmax_SE) * PF_max_torque_SE;
+
 Pin_Tmax_EE = 3 * V1_EE * abs(I_tmax_EE) * PF_max_torque_EE;
+Pin_Tmax_SE = 3 * V1_SE * abs(I_tmax_SE) * PF_max_torque_SE;
 
-P_ag_Tmax_SE = Pin_Tmax_SE - (3*(abs(I_tmax_SE))^2*R1_SE);
 P_ag_Tmax_EE = Pin_Tmax_EE - (3*(abs(I_tmax_EE))^2*R1_EE);
+P_ag_Tmax_SE = Pin_Tmax_SE - (3*(abs(I_tmax_SE))^2*R1_SE);
 
-Pout_Tmax_SE = P_ag_Tmax_SE*(1-st_max_SE);% P_shaft = P_mech = Pout
 Pout_Tmax_EE = P_ag_Tmax_EE*(1-st_max_EE);
+Pout_Tmax_SE = P_ag_Tmax_SE*(1-st_max_SE);% P_shaft = P_mech = Pout
 
-Eff_Tmax_SE = (Pout_Tmax_SE/Pin_Tmax_SE)*100;
 Eff_Tmax_EE = (Pout_Tmax_EE/Pin_Tmax_EE)*100;
+Eff_Tmax_SE = (Pout_Tmax_SE/Pin_Tmax_SE)*100;
 
+fprintf('\n6.a) Efficiency at max torque\n');
+fprintf('Efficiency at maximum torque for EE motor: %.4f W\n', Eff_Tmax_EE);
 fprintf('Efficiency at maximum torque for SE motor: %.4f W\n', Eff_Tmax_SE);
-fprintf('Efficiency at maximum torque for EE motor: %.4f W\n\n', Eff_Tmax_EE);
 
 % b) Maximum Machine efficiency
 
@@ -350,21 +368,22 @@ Eff_SE = (P_shaft_SE./Pin_SE).*100;
 Eff_EE = (P_shaft_EE./Pin_EE).*100;
 
 figure;
-plot(n, Eff_SE, 'r', 'LineWidth', 2); hold on;
-plot(n, Eff_EE, 'b', 'LineWidth', 2);
+plot(n, Eff_EE, 'r', 'LineWidth', 2); hold on;
+plot(n, Eff_SE, 'b', 'LineWidth', 2);
 xlabel('Rotor Speed (RPM)');
 ylabel('Machine Efficiency');
 title('Efficiency vs Speed for SE and EE Motor');
-legend({'SE Efficiency', 'EE Efficiency'}, 'Location', 'Best');
+legend({'EE Efficiency','SE Efficiency'}, 'Location', 'Best');
 grid on;
 hold off;
 
 [max_Eff_SE,Max_Eff_SE_index] = max(Eff_SE);
 [max_Eff_EE,Max_Eff_EE_index] = max(Eff_EE);
 
-
+fprintf('\n6.b) Maximum efficiency\n');
+fprintf('Maximum Efficiency for EE motor: %.4f %%\n', max_Eff_EE);
 fprintf('Maximum Efficiency for SE motor: %.4f %%\n', max_Eff_SE);
-fprintf('Maximum Efficiency for EE motor: %.4f %%\n\n', max_Eff_EE);
+
 
 % c) Finding the speed at maximum efficiency 
 
@@ -373,9 +392,9 @@ fprintf('Maximum Efficiency for EE motor: %.4f %%\n\n', max_Eff_EE);
 n_max_Eff_SE = n(Max_Eff_SE_index);
 n_max_Eff_EE = n(Max_Eff_EE_index);
 
-
-fprintf('Speed n at maximum efficiency for SE motor: %.4f RPM\n', n_max_Eff_SE);
-fprintf('Speed n at maximum efficiency for EE motor: %.4f RPM\n\n',n_max_Eff_EE);
+fprintf('\n6.c) Speed at maximum efficiency\n');
+fprintf('Speed at maximum efficiency for EE motor: %.2f rpm\n',n_max_Eff_EE);
+fprintf('Speed at maximum efficiency for SE motor: %.2f rpm\n', n_max_Eff_SE);
 
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 disp('QUESTION 7: Adding a Centrifugal pump as a load to the EE and SE Motor:')
@@ -383,16 +402,17 @@ disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 % a) Finding machine speed when operating the load
 
+k_Load = 946.88 * 10^-6;
 T_Load = k_Load .* (w.^2);
 
 figure;
-plot(n, Tmech_SE, 'r', 'LineWidth', 2); hold on;
-plot(n, Tmech_EE, 'b', 'LineWidth', 2);
+plot(n, Tmech_EE, 'r', 'LineWidth', 2); hold on;
+plot(n, Tmech_SE, 'b', 'LineWidth', 2);
 plot(n,T_Load, 'c', 'LineWidth', 2);
 xlabel('Rotor Speed (RPM)');
 ylabel('Torque (W)');
-title('Torque vs Speed for SE Motor');
-legend({'Torque SE', 'Torque EE' , 'Torque Load'}, 'Location', 'Best');
+title('Torque vs Speed for EE and SE Motor');
+legend({'Torque EE' ,'Torque SE', 'Load torque'}, 'Location', 'Best');
 grid on;
 hold off;
 
@@ -409,32 +429,36 @@ EE_TMEch_Tload_ratio = abs(Tmech_EE./T_Load - 1);
 Operating_speed_SE = n(Operating_point_index_SE);
 Operating_speed_EE = n(Operating_point_index_EE);
 
-fprintf('Speed n when operating pump for SE motor: %.4f RPM\n', Operating_speed_SE);
-fprintf('Speed n when operating pump for EE motor: %.4f RPM\n\n',Operating_speed_EE);
+fprintf('\n7.a) Operating speed\n');
+fprintf('Speed when operating pump for EE motor: %.2f rpm\n',Operating_speed_EE);
+fprintf('Speed when operating pump for SE motor: %.2f rpm\n', Operating_speed_SE);
 
 % b) Current drawn during operation
 
 I1_Operating_SE = I1_mag_SE(Operating_point_index_SE);
 I1_Operating_EE = I1_mag_EE(Operating_point_index_EE);
 
-fprintf('Current drawn I1 when operating pump for SE motor: %.4f A\n', I1_Operating_SE);
-fprintf('Current drawn I1 when operating pump for EE motor: %.4f A\n\n',I1_Operating_EE);
+fprintf('\n7.b) Current drawn \n');
+fprintf('Current drawn when operating pump for EE motor: %.4f A\n',I1_Operating_EE);
+fprintf('Current drawn when operating pump for SE motor: %.4f A\n', I1_Operating_SE);
 
 % c) Machine efficiency during operation
 
 Eff_Operating_SE = Eff_SE(Operating_point_index_SE);
 Eff_Operating_EE = Eff_EE(Operating_point_index_EE);
 
+fprintf('\n7.c) Efficiency\n');
+fprintf('Efficiency when operating pump for EE motor: %.4f %%\n',Eff_Operating_EE);
 fprintf('Efficiency when operating pump for SE motor: %.4f %%\n', Eff_Operating_SE);
-fprintf('Efficiency when operating pump for EE motor: %.4f %%\n\n',Eff_Operating_EE);
 
 % d) Power output/supply during operation
 
 Pout_Operating_SE = P_shaft_SE(Operating_point_index_SE);
 Pout_Operating_EE = P_shaft_EE(Operating_point_index_EE);
 
+fprintf('\n7.d) Output power\n');
+fprintf('Output power when operating pump for EE motor: %.4f W\n',Pout_Operating_EE);
 fprintf('Output power when operating pump for SE motor: %.4f W\n', Pout_Operating_SE);
-fprintf('Output power when operating pump for EE motor: %.4f W\n\n',Pout_Operating_EE);
 
 
 % e) Input Power during operation
@@ -442,8 +466,9 @@ fprintf('Output power when operating pump for EE motor: %.4f W\n\n',Pout_Operati
 Pin_Operating_SE = Pin_SE(Operating_point_index_SE);
 Pin_Operating_EE = Pin_EE(Operating_point_index_EE);
 
+fprintf('\n7.e) Input power\n');
+fprintf('Input Power drawn when operating pump for EE motor: %.4f W\n',Pin_Operating_EE);
 fprintf('Input Power drawn when operating pump for SE motor: %.4f W\n', Pin_Operating_SE);
-fprintf('Input Power drawn when operating pump for EE motor: %.4f W\n\n',Pin_Operating_EE);
 
 % f) Comparing input power for EE and SE
 
