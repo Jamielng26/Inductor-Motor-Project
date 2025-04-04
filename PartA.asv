@@ -306,26 +306,53 @@ P_shaft_SE = (1.-s).*P_ag_SE;% rotational losses neglected hence P_shaft = P_mec
 P_shaft_EE = (1.-s).*P_ag_EE;
 
 figure;
+
 plot(n, Pin_EE,'LineWidth', 1), hold on;
 plot(n, P_shaft_EE,'LineWidth', 1); hold on;
 plot(n, P_ag_EE,'LineWidth', 1); hold on;
 plot(n, P1_cu_EE,'LineWidth', 1); hold on;
 plot(n, P2_cu_EE,'LineWidth', 1); hold on;
-xlabel('Speed [RPM]'), ylabel('Power [W]'),...
+xlabel(' Speed [RPM]'), ylabel('Power [W]'),...
 title('Power vs Speed for EE Motor'), grid on;
 legend('Pin', 'Pshaft', 'Pag', 'P1cu', 'P2cu');
 
-figure;
-plot(n, Pin_SE,'LineWidth', 1), hold on;
-plot(n, P_shaft_SE,'LineWidth', 1); hold on;
-plot(n, P_ag_SE,'LineWidth', 1); hold on;
-plot(n, P1_cu_SE,'LineWidth', 1); hold on;
-plot(n, P2_cu_SE,'LineWidth', 1); hold on;
-xlabel('Speed [RPM]'), ylabel('Power [W]'),...
-title('Power vs Speed for SE Motor'), grid on;
-legend('Pin', 'Pshaft', 'Pag', 'P1cu', 'P2cu');
+plot(n, Pin_EE); 
+hold on;
+ plot(n, P_shaft_EE); 
+hold on;
+ plot(n, P_ag_EE); 
+hold on;
+ plot(n, P1_cu_EE); 
+hold on;
+ plot(n, P2_cu_EE); 
+hold on;
 
+ xlabel('Speed [rpm]');
+ ylabel('Power [W]');
+ title('Power vs Speed for EE Motor');
+ grid on;
+ legend('Pin', 'Pshaft', 'Pag', 'P1cu', 'P2cu');
+ figure;
+ hold off
 
+ plot(n, Pin_SE); 
+hold on;
+ plot(n, P_shaft_SE); 
+hold on;
+ plot(n, P_ag_SE); 
+hold on;
+ plot(n, P1_cu_SE); 
+hold on;
+ plot(n, P2_cu_SE); 
+hold on;
+
+ xlabel('Speed [rpm]');
+ ylabel('Power [W]');
+ title('Power vs Speed for SE Motor');
+ grid on;
+ legend('Pin', 'Pshaft', 'Pag', 'P1cu', 'P2cu');
+ figure;
+ hold off
 
 
 disp('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
