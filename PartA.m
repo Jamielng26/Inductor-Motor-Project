@@ -73,7 +73,7 @@ Xth_SE=imag(Zth_SE);                          %Thevenin equiv reactance [ohms]
 
 fprintf('\n');
 fprintf('SE Motor\n');
-fprintf('\n');
+fprintf('\n'); 
 
 fprintf('Vth=%f\n',Vth_SE);
 fprintf('Rth=%f\n',Rth_SE);
