@@ -184,7 +184,7 @@ I_tmax_SE = V1_SE./Z1_tmax_SE;
 
 
 fprintf('\n3.c) Stator current at maximum torque\n');
-fprintf('Stator current for SE Motor at maximum torque: %.4f < %.2f° A\n', abs(I_tmax_EE), rad2deg(angle(I_tmax_EE)));
+fprintf('Stator current for EE Motor at maximum torque: %.4f < %.2f° A\n', abs(I_tmax_EE), rad2deg(angle(I_tmax_EE)));
 fprintf('Stator current for SE Motor at maximum torque: %.4f < %.2f° A\n', abs(I_tmax_SE), rad2deg(angle(I_tmax_SE)));
 disp('At maximum torque, the stator current is higher as the motor draws more current to maintain the required torque. The value depends on the supply voltage and the stator impedance.');
 
@@ -196,7 +196,7 @@ Z1_nl_SE = R1_SE+1i*(X1_SE+Xm_SE);
 I_nl_SE = V1_SE./Z1_nl_SE;
 
 fprintf('\n3.d) Stator current under no-load conditions\n');
-fprintf('Stator current for SE Motor under no-load:: %.4f < %.2f° A\n', abs(I_nl_EE), rad2deg(angle(I_nl_EE)));
+fprintf('Stator current for EE Motor under no-load:: %.4f < %.2f° A\n', abs(I_nl_EE), rad2deg(angle(I_nl_EE)));
 fprintf('Stator current for SE Motor under no-load:: %.4f < %.2f° A\n', abs(I_nl_SE), rad2deg(angle(I_nl_SE)));
 disp('Under no-load conditions, the stator current is relatively low as only the magnetizing current is required to maintain the magnetic field.');
 
