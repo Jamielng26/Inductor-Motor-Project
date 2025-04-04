@@ -40,6 +40,7 @@ fprintf('\n');
 fprintf('SE Motor\n');
 fprintf('\n');
 
+
 fprintf('f=%f\n',f_SE);
 fprintf('p=%f\n',p_SE);
 fprintf('V1=%f\n',V1_SE);
