@@ -462,7 +462,9 @@ fprintf('Input Power drawn when operating pump for SE motor: %.4f W\n', Pin_Oper
 
 % f) Comparing input power for EE and SE
 
-Diff_Pin_Comp = (Pin_Operating_SE - Pin_Operating_EE);
+Diff_Pin_Comp_EE = (Pin_Operating_EE - Pin_Operating_EE);
+Diff_Pin_Comp_SE = (Pin_Operating_SE - Pin_Operating_EE);
 
-fprintf('The difference in input power is: %.4f W\n',Diff_Pin_Comp);
+fprintf('\n7.f) Comparing input power\n');
+fprintf('The difference in input power is: %.4f W\n',Diff_Pin_Comp_SE);
 fprintf("The EE motor has a lower slip value when running the load compared to the SE motor(reason lower slip cause higher efficiency). The higher slip means the slip dependent resistance is larger hence I2 for EE is lower than that in SE. I2 affects I1 hence a drop in I2 results in a corresponding drop in I1. The input power is therefore lower in EE compared to SE.This is as observed in simulation.")
